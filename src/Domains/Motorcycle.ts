@@ -1,11 +1,11 @@
-import IMotorcyle from '../Interfaces/IMotorcycle';
+import IMotorcycle from '../Interfaces/IMotorcycle';
 import Vehicle from './Vehicle';
 
 class Motorcycle extends Vehicle {
   private category: string;
   private engineCapacity: number;
 
-  constructor(motorcycle: IMotorcyle) {
+  constructor(motorcycle: IMotorcycle) {
     super(motorcycle);
     this.category = motorcycle.category;
     this.engineCapacity = motorcycle.engineCapacity;
