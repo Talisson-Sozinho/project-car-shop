@@ -7,4 +7,8 @@ const carController = new CarController();
 
 carRouter.post('/', carController.create);
 
+carRouter.get('/', carController.allCars);
+
+carRouter.get('/:id', carController.carById);
+
 export default carRouter;
