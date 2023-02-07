@@ -11,4 +11,6 @@ carRouter.get('/', carController.allCars);
 
 carRouter.get('/:id', carController.carById);
 
+carRouter.put('/:id', carController.updateCarById);
+
 export default carRouter;

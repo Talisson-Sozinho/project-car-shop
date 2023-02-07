@@ -1,3 +1,4 @@
+import { isValidObjectId } from 'mongoose';
 import Car from '../Domains/Car';
 import ICar from '../Interfaces/ICar';
 import IError from '../Interfaces/IError';
@@ -13,6 +14,16 @@ class CarService {
     return null;
   }
 
+  private checkIfValidId(id: string) {
+    if (!isValidObjectId(id)) throw { code: 422, message: 'Invalid mongo id' } as IError;
+  }
+
+  private async checkIfCarExists(id: string) {
+    const car = await this._carModel.findById(id);
+    if (!car) throw { code: 404, message: 'Car not found' } as IError;
+    return car;
+  }
+
   public async register(car: ICar) {
     const newCar = await this._carModel.create(car);
     return this.createCarDomain(newCar);
@@ -24,13 +35,15 @@ class CarService {
   }
 
   public async getCarById(id: string) {
-    if (!/^[a-f\d]{24}$/i.test(id)) throw { code: 422, message: 'Invalid mongo id' } as IError;
-
-    const car = await this._carModel.findById(id);
-
-    if (!car) throw { code: 404, message: 'Car not found' } as IError;
-
+    this.checkIfValidId(id);
+    const car = await this.checkIfCarExists(id);
     return this.createCarDomain(car);
+  }
+
+  public async updateCar(id: string, car: ICar) {
+    this.checkIfValidId(id);
+    await this.checkIfCarExists(id);
+    return this.createCarDomain(await this._carModel.updateCarById(id, car));
   }
 }
 
