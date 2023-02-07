@@ -2,10 +2,11 @@ import { isValidObjectId } from 'mongoose';
 import Car from '../Domains/Car';
 import ICar from '../Interfaces/ICar';
 import IError from '../Interfaces/IError';
-import CarODM from '../Models/car.model.odm';
+import AbstractODM from '../Models/AbstractODM';
+import carSchema from '../Models/schemas/carSchema';
 
 class CarService {
-  constructor(private _carModel = new CarODM()) {}
+  constructor(private _carModel = new AbstractODM(carSchema, 'Car')) {}
   private createCarDomain(car: ICar | null): Car | null {
     if (car) {
       const newCar = new Car(car);
@@ -43,7 +44,7 @@ class CarService {
   public async updateCar(id: string, car: ICar) {
     this.checkIfValidId(id);
     await this.checkIfCarExists(id);
-    return this.createCarDomain(await this._carModel.updateCarById(id, car));
+    return this.createCarDomain(await this._carModel.updateOneById(id, car));
   }
 }
 
